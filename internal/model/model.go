@@ -1,11 +1,30 @@
 package model
 
-import "time"
+// 链码初始化方法请求体
+type InitChaincodeReuqest struct {
+	ChaincodeName string `json:"chaincodeName" binding:"required"`
+	DocType       string `json:"docType" binding:"required"`
+}
 
-// 请求体
+// 链码添加方法请求体
+type AddReuqest struct {
+	ChaincodeName string `json:"chaincodeName" binding:"required"`
+	Keys          string `json:"keys" binding:"required"`
+	Content       string `json:"content" binding:"required"`
+}
+
+// 链码添加方法请求体
+type PageQueryReuqest struct {
+	ChaincodeName string `json:"chaincodeName" binding:"required"`
+	Keys          string `json:"keys" binding:"required"`
+	Pagesize      string `json:"pagesize" binding:"required"`
+	Nextmark      string `json:"nextmark"`
+}
+
+// 链码删除方法请求体
 type Reuqest struct {
 	ChaincodeName string `json:"chaincodeName" binding:"required"`
-	Data          string `json:"data" binding:"required"`
+	Keys          string `json:"keys" binding:"required"`
 }
 
 // 响应体
@@ -15,31 +34,10 @@ type Response struct {
 	Data interface{} `json:"data"`
 }
 
-// 链码添加方法参数序列化结构体
-type Contract_Add_Params struct {
-	Params  []string `json:"keys"`
-	Content string   `json:"content"`
-}
-
-// 链码响应
-type Contract_Reponse struct {
-	Code int         `json:"code"`
-	Data interface{} `json:"data"`
-	Msg  string      `json:"msg"`
-}
-
 // 链码分页想用
 type Contract_PageResult struct {
 	Code     int         `json:"code"`
 	Count    int32       `json:"count"`    // 总数量
 	Nextmark string      `json:"nextmark"` // 指向下一个的标记
 	Data     interface{} `json:"data"`
-}
-
-// 链码log响应
-type Contract_LogResult struct {
-	Record    interface{} `json:"record"`
-	TxId      string      `json:"txId"`
-	Timestamp time.Time   `json:"timestamp"`
-	IsDelete  bool        `json:"isDelete"`
 }

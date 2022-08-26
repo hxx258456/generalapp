@@ -16,5 +16,12 @@ func InitRouter() {
 		})
 	})
 	r.POST("/initChaincode", api.InitChaincode)
+	r.POST("/add", api.Add)
+	r.POST("/update", api.Update)
+	r.POST("/delete", api.Delete)
+	r.POST("/query", api.Query)
+	r.POST("/queryAll", api.QueryAll)
+	r.POST("/querysByPagination", api.QuerysByPagination)
+	r.POST("/queryLog", api.QueryLog)
 	r.Run(config.Get().System.Addr) // 监听并在 0.0.0.0:8080 上启动服务
 }
