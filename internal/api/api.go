@@ -469,6 +469,7 @@ func Query(c *gin.Context) {
 			Data: result,
 		}
 		c.JSON(200, resp)
+		return
 	}
 
 	encResult, err := utils.Encrypt(sdkpool.SdkPoll[param.ChaincodeName].Public, string(result))
@@ -664,10 +665,10 @@ func QuerysByPagination(c *gin.Context) {
 		c.JSON(200, resp)
 		return
 	}
-	log.Println("解密结果[Keys]: ", keyDec)
+	log.Println("解密结果[pageSize]: ", psDec)
 
 	var nextmarkDec string
-	if param.Nextmark == "" {
+	if param.Nextmark != "" {
 		// 解析16进制字符串为[]byte
 		nextmarkByte, err := hex.DecodeString(param.Nextmark)
 		if err != nil {
@@ -691,12 +692,12 @@ func QuerysByPagination(c *gin.Context) {
 			c.JSON(200, resp)
 			return
 		}
-		log.Println("解密结果[Keys]: ", keyDec)
+		log.Println("解密结果[nexkMark]: ", nextmarkDec)
 	}
 
 	// sdk发起交易
 	var result = []byte{}
-	result, err = sdkpool.SdkPoll[param.ChaincodeName].Contract.SubmitTransaction("queryAll", keyDec, psDec, nextmarkDec)
+	result, err = sdkpool.SdkPoll[param.ChaincodeName].Contract.SubmitTransaction("querysByPagination", keyDec, psDec, nextmarkDec)
 	if err != nil {
 		log.Println(err)
 		// todo 重新初始化sdk并发起请求
@@ -704,7 +705,7 @@ func QuerysByPagination(c *gin.Context) {
 		sdk_.InitSdk()
 		sdkpool.SdkPoll[param.ChaincodeName] = sdk_
 
-		result, err = sdkpool.SdkPoll[param.ChaincodeName].Contract.SubmitTransaction("queryAll", keyDec)
+		result, err = sdkpool.SdkPoll[param.ChaincodeName].Contract.SubmitTransaction("querysByPagination", keyDec, psDec, nextmarkDec)
 		if err != nil {
 			resp := model.Response{
 				Code: 0,

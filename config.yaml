@@ -22,3 +22,12 @@ chaincodes:
       privateKey: 0b15a775077e438bce6ebcb7b30c3e61d9909ee861568723661d4728ee701068
     organizationsDir: organizations
     walletLabel: general2
+  - channel: mychannel
+    chaincode: notary
+    public:
+      publicKeyX: 0ce2fa6e66521155f780573beb0e5f18d0aeea6b9a145f54e5c8c442efd15ecf
+      publicKeyY: fa332850bffd6e06cbbd6e29ac851fe12da302c74550c3d75e24db54a2a1fdd7
+    private:
+      privateKey: 0b15a775077e438bce6ebcb7b30c3e61d9909ee861568723661d4728ee701068
+    organizationsDir: organizations
+    walletLabel: notary
