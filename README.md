@@ -40,7 +40,7 @@ chaincodes:
 # 部署
 ```shell
 // 编译文件
-CGO_ENABLED=0 build -o generalapp
+CGO_ENABLED=0 go build -o generalapp .
 // 编译docker镜像
 docker build -t generalapp:v0.0.1 .
 
@@ -69,11 +69,23 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|docType|true|string|链码名称sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|docType|true|string|couchdb文档类型|notary|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "docType": "notary"
+}
+```
+
+###### 返回字段解密后结构
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
@@ -82,11 +94,7 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 接口示例
 ``` json
-{
-    "code": 1,
-    "msg": "success",
-    "data": null
-}
+041ced976b5cf99f5482bd3d7d34ada224fe930bd07537e5001b66a6dad845ce0158b070401a64f05daf972c8169611690b02d41b291a2ebfac4537bd04a8d6a8e71985c4e812b989502d1f035e806ad4e00474612dc326851509e60e9aafa0b5cd556050e742a55a30cf369ddb86e213d31c6764b337e5d17de8705a8664611a95545d293fb5f
 ```
 
 ---
@@ -106,25 +114,34 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|keys|true|string|链码参数sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
-|content|true|string|链码数据sm2加密16进制字符串|04a347d2dcd6c2157c478e3a5c87b7b380c8dc52cd37c2dd5bd4f72613ff8ca3238f2bf6f24a58121de0d8809eee2bdc4035b0ba56e67996df3dc3065b999ef61a716dc830f61d38a740c475aa2b23e80b6ee1a38c4c5a213ac4cbfd33594b1a94dea8f87dfeb91c51fb7d1a3110f18effbd457f2c1afbf0e9183486cfea3e411d28698f72b7e825a9f380d5092a4c190e2001c3bd764c1a6345cf5c7623b48d9017b7869e04df8ddb3d6fd2d5f2320fac411a82f57466334ee70567ac1ccc2fc7bbf0eebfaa|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+|content|true|string|数据json字符串|{\"notaryOfficeId\":40,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "keys": "[\"144\",\"C402022072640\"]",
+  "content": "{\"notaryOfficeId\":40,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}"
+}
+```
+
+###### 返回字段解密后结构
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据                         |
+|data |string |链码返回txId                       |
 
 ###### 接口示例
 ``` json
-{
-    "code": 1,
-    "msg": "success",
-    "data": null
-}
+0406a2573d7424d1118278d03711fd6874a4459ff2ad349d1a5939b9e5654b296b920b4408aef5506b07e35873b08226aa77062e1e7f0211d01de093b999965e67c10f3ff1e1b93afe44bcfe6b2379cc41e46e270b7023d0e40b333ff8d6fb398a6bfe266d4787f5e30a91c78af9ac03dc9e5e92b3d2dda6a36bf1394cc16e44cab3cf40524ea3
 ```
 
 ---
@@ -144,25 +161,34 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|keys|true|string|链码参数sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
-|content|true|string|链码数据sm2加密16进制字符串|0485038cc2ee0104fb98c19b986ddc25fe9945c428289b9776afdad58d0c368d91500e73066e2c26fd19160afb5bea0d7fbd64346a68af2568d2925bb108ac955a5af51a452e2076b2e00a661bbce5d3229353fd3eb7b0206c0c7342e4b8173be79982a2aae8a4b8e2e3d52f2cff5b54b4bd411e5db1ecda57fed569ff8b3328c92bce01410d1cfe534e4a3423d1eb00bf15fa691eaa14140d7d60da02e2349b1b7ce4249fe371b23b1f2cbde7de2634718eca92a42fcd9d347622e8e7f0cbd8c53f5684308f|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+|content|true|string|数据json字符串|{\"notaryOfficeId\":40,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "keys": "[\"144\",\"C402022072640\"]",
+  "content": "{\"notaryOfficeId\":40,\"serviceType\":12312,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}"
+}
+```
+
+###### 返回字段解密后结构
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据                         |
+|data |string |链码返回txId                         |
 
 ###### 接口示例
 ``` json
-{
-    "code": 1,
-    "msg": "success",
-    "data": null
-}
+0406a2573d7424d1118278d03711fd6874a4459ff2ad349d1a5939b9e5654b296b920b4408aef5506b07e35873b08226aa77062e1e7f0211d01de093b999965e67c10f3ff1e1b93afe44bcfe6b2379cc41e46e270b7023d0e40b333ff8d6fb398a6bfe266d4787f5e30a91c78af9ac03dc9e5e92b3d2dda6a36bf1394cc16e44cab3cf40524ea3
 ```
 
 ---
@@ -182,24 +208,32 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|keys|true|string|链码参数sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "keys": "[\"144\",\"C402022072640\"]"
+}
+```
+
+###### 返回字段解密后解构
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据                         |
+|data |string |链码返回txId                       |
 
 ###### 接口示例
 ``` json
-{
-    "code": 1,
-    "msg": "success",
-    "data": null
-}
+0406a2573d7424d1118278d03711fd6874a4459ff2ad349d1a5939b9e5654b296b920b4408aef5506b07e35873b08226aa77062e1e7f0211d01de093b999965e67c10f3ff1e1b93afe44bcfe6b2379cc41e46e270b7023d0e40b333ff8d6fb398a6bfe266d4787f5e30a91c78af9ac03dc9e5e92b3d2dda6a36bf1394cc16e44cab3cf40524ea3
 ```
 
 ---
@@ -219,24 +253,32 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|keys|true|string|链码参数sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "keys": "[\"144\",\"C402022072640\"]"
+}
+```
+
+###### 返回字段解密后解构
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据(16进制字符串需要sm2解密处理)|
+|data |string |链码返回数据|
 
 ###### 接口示例
 ``` json
-{
-    "code": 1,
-    "msg": "success",
-    "data": "0452856340c7d6764e6672c211188f9ad46ba66b2c6b8002c05a1a415e4317b44464c361393e3831cc267c404f5f9cbc6499c1364c714241980fe1952f0f87eb6d8e4ae99c91c3966bfa0750fd5d4cf9f646fa6e3ce755f5bb98cc0aca66f00d1a39ef3c20c243105476ee1bb3083a8e399c53f1acb7bf118a6cd0388068d38d67e69168dacd3348c4e5942208609b5a78cf633fa677036e9d4697a0a9825e744a30e2d6b3d0c87934d95bd9f37815a3e3cccd58ee8e03112cf378715224540abcc5ac22cb54"
-}
+044d92d3ed19bfdccc77ee2275a441a94c05b5beeaf73faa31ceafc083428709ed583507fea0d3d3a7aa00e1bedd6b200dff0a61f83d9415f5076a92a98f5617786255f0913d6248d5383cb67be11710bb7bdb6169630605d65548f6a38883c320df0704ed41c6fd9d860391c8d55f70d01cdb4f9f1c5c84ff03d3fd94e28886e1dee3491f6cdcb559a9402ffc482de89670878a84033da5639853a0dad34c69f5366674a0b0f4cc3878f03f82e9b2b4947f90b57e48d1544416e58b352da8d8439d86214471ccaa994dc6e528b7166f628ebf5545a99eef1ad8fb60a6ab7aed5c70d9811391f21490db8b1732f5f6915d91b88254cb
 ```
 
 ---
@@ -256,24 +298,32 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|keys|true|string|链码参数sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "keys": "[]"
+}
+```
+
+###### 返回字段解密后格式
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据(16进制字符串需要sm2解密处理)|
+|data |string |链码返回数据|
 
 ###### 接口示例
 ``` json
-{
-    "code": 1,
-    "msg": "success",
-    "data": "046bf9702922fccc7b5b0b493efdff705e605d887a93c93f85e293f51409122491b1b48c715087656cf6c990a164ac83949ac6a1c08c3f8310af1a68ca14535097019909302d3fba7de6cc50f5ca99c641598866d2acf853a592a9f927ab8587d5a3d0de19d33818b0611c48f31d6c3ea8a1d33c11e9590afdbbe490a4810f30919d3838c670c47cde29140a7765ff5e124d65143b7b368c78acde75258a1bc3e4ae549c7692ff332e925b0259cae068125d5fbe43da7bb22ffad82c4adba2e382aec88163307dc9"
-}
+0482f84b3f6361eaf0330002a7a8e642b1849e8896930ef16c7d84f977be95e1d613a082033034a2639b54fd58c4d89f67585ce7c9224543bd69f593383811a0c32688ff94a60d89c08a312f56f6fe33d19783668b22374b42393532dbe3eab42d3ff45bda3f306697d9dd186a08df293f75b4aeb8844fb7fc0c4b392034401acce99cc5ba1bf6aff74fb698a484fb7806e71b5ab2e3427762da6946eaa3a41fc24e9e84d25e47f8bfbfdf7c8a0c8f25274b1cd46233728b1e30ebdfb8ad641325c417661ec5ab9c29ded7c5adc20a5ec838f1357e704dc92abd2f7a118d024338e785fe8135a1e16969d7dbbeee422c711f0daf7e4cee5a677b4e208310e1867db226a0b03e7b4c7aa065547340b411e94f2a1afa2807739d9a0c9260a9aca6ddb2f302fbff1e9b5a511e4a4acc935119e08c807cd800de6aff5d34b03f6e0bf3f58f21ce3147071e433fa51002fd51921e492ac2567c6a7e85da43c59c3cf72a3fd7f62941c0d6334f7cfd87f285fd1962d021bbf04cd2d0f762225d19691fbff439fb5cefb56dd11bc03fc6f6671e24c000f823f2758bb79cfe7a15532fa9d2820829d4dda6bd28143615433165823388e2f4262d87e30842194614787b09e0fa1364906655c3259b5f5e00c20af0e94e6f52c21422baf94c639524b17c9af3100249f5c41be88d30c0b023735a7d311f27009bacf37501a4bdd40a8a0d3872637b85f64e4a40b016fe4826942870653b6c29296f91c618b040fb0bd9ceca65c2de6362e0a808dcb2b314ca7f8afe918904e7c43b0a97be667e33605bbb49d6f5f8535d5805fb42d68acb1a70f8a521946fe9335cbfaf86814f99d64e347939bf9f4220ef2c9471e06750916b3f4cb74c857fcb30610d0ad75a1c3c870eb67c5242a68b5187feeccbe9bc7eb22e9996ac534d7e9b274c99a231e0d360e8d7d076c677515e652cd0d9a8b3656c9dcf5481dafc2d5611d9865f9c1da3ac7bfa7f70fd8c3877f34a61942d34840b30624f932f2f1cb3964b0f54092ab7a5fdfb5eaf502025a5292a49fbf48b128c81ea0d72787ea838e980501d2b58f6f9963a5b5d43622e9f87403eacc5b056070668fdf39d03b43c48bd2a7c29da9e3edc1f345d253bac10cfdefa18b541758cfc880866e66c323575df57c61bb43ab723c8caf2742b6484e58b899f1a86c8e02a696f5fa23aa3a09080f525753cd82f1049833fd86c819876fd9a85af4b7fedf595c2a574e41f7acc5778ab47ebe8bf6bff821c0757021372ec6a379e42c279161526e4495d9b8ed4da097b6d162579a015a8a30f4bdcd21fee787bf9d613facc4ce28e34b00e180eea1307da39423b5698d90c198c1b170539fca918f3b2f44ca2bf913bccce7d94c33155657f35df170b9f3e00ced660
 ```
 
 ---
@@ -293,24 +343,32 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|keys|true|string|链码参数sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "keys": "[\"144\",\"C402022072640\"]"
+}
+```
+
+###### 返回字段解密后结构
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据(16进制字符串需要sm2解密处理)|
+|data |string |链码返回数据|
 
 ###### 接口示例
 ``` json
-{
-    "code": 1,
-    "msg": "success",
-    "data": "04cae7237e9c62d46814f9ac2deea7a287708338b55acf6b5a08130a7881ef1347fc82fa91f8c714de7767dacb34f0761fb323fb6f3e10ac30419f3c14eff0620773986f3896f88199b73c5a10b5597b8e64d55189f0ff4adb73912849c01e3fcf2f7598600f54e07835558a7aeb4666d0235c2540b08f54b5aba7d4b2481dbfd6d3ae93323b7b7f7b258d4ef4cb7467b2410f1cfcd5501029d04f7cc1dc8a908f03837cbba67726713d0426139236ba4a0aa86648c2c5862062001536321709dc18c77224ba014e32f699c1c44a5e6b5070081269619b3e7c04c48cdacac96bf0c65b49d8efc73ba3cb8e9659d52bf99d0f5eee7d3a9c93bdc4ab7e285777d87665890f3a29e6b99f794ec2ccf69275a28b32dadc48766dd0351eabcc23215254a0a13c5d6fce5b956f0006a02f03493d405723074934d5cf620d0b1b4dd43000b2ee6e4cc9e434adf7feefcc1a43cf610572245363efb567b4bd723d037276b0d1e57b5a5e893fb955c939e38e6fa3db3985d5633238f40b8df08997e63f2deac5eb65c906f32a25a242aa9a030a8735480cca63c07c47263019e311ded95359393b4efd6517d8f97384f8c03dcabf782063da482c4bb5e1c0b2ca231304de83986e3775b1f7e7c8f6b0189b19a678894e072e84fb287fa895451e4bf98d6b8186886b2afb7fa3e39094c5af06075a6d53b7e84e05395928620fdfca0e496443f1f0d9fdf5ef2d7ab6185e6cc5eab6b18d1eec249acc7243f788918d83ed1d596bc0e298e2446af552d7d5dcd6cc8f7012b24710b7dfaa3df60772ba8f780b932316c04b86f464aad7bba6ba8365476745c229bc7da07704aa9b485963761e44637249bf007f99e8f8430a92c36ed1f294fadad0d7615b5e5325c144133951a24704d6e9d349f7d837562f5a1c8ada4dcae621f47ecbf4c7197f6ad3c8fde77ce14482d6e4413ed3cb6e83f76e38835917d70b71c9c2a2954d34ad8247cc492bf05f73066b270a84c939a8a367c2e9e8d6a31193249dc0ae451e6e01b7750cb4ac0db22c63516decb2548dc186edce91f1e0e3512f85393661f3d2d251a8c8e1b9fa1e07b3bf80bd7b87fec686a16f7693ecd555b101a6250d1e9cb92e2e0a655ee8bbf0c76369e5e427a860e8c5e4f539a08f51a8c8b6aa24cb3482960d71b39907dd4764948b9839697dde23f9828f6a6db0b07dbba41eca821211472b33c046a09ef71c1ff5f1a94ea99e0fb306e0173b6e7e1a6cf1074030a19848a076d6969e2c4dd0a6d8b40ba7912d9bc13f2349fd5362be04ec33405b5f0b3243bea5dfe474e1dde6cb1fd1ae505cde07a1418406687e07633eec77a5c7ea9d159906381fa62538c54fbe53543d3148c16d3db5ce8e2fda84759045c28f24bb860d9e61a4d2d227e41c967d94b717021c919bf5fd701690a4952247c8161b22667c2568841e8c89b0fda10d769e"
-}
+044b281a218bf3c2bdcc0b5f255b26aab64d816e39cd33ffeeada033e97df5498f407c7e679a2cca761edf0600bd43225feb74a8ee8c460b532207d28a213eba0c7384b1d3b7fb36cfe4acd8367dce8e3c69ddaf86ac904d9b55881690908329e0eff5fa72bd881950c7fbe9e867ef11d8293b7987b442a25db0194eb2d13bf2841ce1767e88ab08941fd5ab110d8d8727ec6e3b4aa9b6d3f7d33ec666d63101af6ad57d41509e0087c8a40172c4ab17b3e19877a142fdcbebc1e92e1c47d8e5abaa4db790d963010fd1fe007d5e74b403203b7ed03bbef9ac2546f42bef69ce9bd787fc21d7c879f560e8fbb542a2b13a6e99f2f843c9adab9dc705fde87b057239332541f9057ce647413310b3de77dbac8bef45bc5b95d232594882b6b1316168dc96055a212a2b3713227a1eb2d0c377c1133cc86a60dc4bdb6c22b552c5b81ba7a567484c39d3c35dc95d8a8311e777e8e4955330975f9086992fdb4ac88bd1fc1a31a3f68db93f42133e72bd7424af6121c8bbd5d13897cbe28767d9c08a264f98f4af0356bd3cb717057fc10a29ff27b9cd2186f422d411f71629be2840150a05397fe14f7cf4abd5111fc07d72d847
 ```
 
 ---
@@ -330,24 +388,85 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ###### 请求参数
 |参数|必选|类型|说明|example|
-| :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|keys|true|string|链码参数sm2加密16进制字符串|04320e2938d399a34b76dfd99bcb8ca5fd6695a9bb4dc7ca02715a9e4225ce6a06e71ea903dd9c117f1ee7dadba76793a075a228c4f90d767dedbe147a5f7cd03c06631a7d1c3facae432046197e89af45d822ba5f5739373d2fce1c3ad2153fd982b5|
-|pageSize|true|string|分页大小整数类型sm2加密16进制字符串|04c5472ce881dda7c3792fbad7b18acd906c6cae43b8b2a17bf29180dad7c97be73961532d598eb1b6a43131025d2a6c216f8feb7b10db35f91a33251f6309e004a908d42715df3e29a2f6554f47532e5e1ac4449301dada80f0f0f45ce12571f7c5af|
-|nextmark|false|string|链码返回bookmark标签sm2加密16进制字符串||
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
 
-###### 返回字段
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+|pagesize|true|string|分页大小|"12"|
+|nextmark|true|string|链码返回mark标志|""|
+
+###### 链码请求数据未加密前示例
+```json
+{
+  "keys": "[\"144\",\"C402022072640\"]",
+  "pagesize": "12",
+  "nextmark": ""
+}
+```
+
+###### 返回字段解密后结构
 |返回字段|字段类型|说明                              |
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据(16进制字符串需要sm2解密处理)|
+|data |string |链码返回数据|
 
 ###### 接口示例
 ``` json
+0451feeaf93749b9a61544436fdd239ab4b1b8c1eb7e8c4443949bf3b2bf1581ac5cbeae3e74979ce364c5a02c705dcb00a727287fa85133d75104f1b43369c54172c827c4cdfa70324db3cfc2c2ade9de2d278965633919c3ce1463091c8549c013f730675bcba7b569da7bf9149547021db8c54b24780ef64e349f8a6a45301d23e444e1c44bbc983efc1fb25fc49afebe342b062ebcdfa900a68c446e13d8153fb9ccd4b4562503819d1549621c90cde2fb07d2b65a6941896aa41505ae39202f2c527ef8222e38854b9fc212d6459fe332786be72cb7853b8743912c6a86bf065d9f00fcfcce25180cf1639aad7a9ddc176365536dea4093b1cb252bb80887c7e8b336cba4abd36cf99ff12e4293c94e251206d24f349a1ddec10e1690ba95de8e40a60e28ee57fbb8f5c1d4f7502801f6e7ac2e14ee0c3502ddfbde3036cbaaa9a89c83be8220
+```
+
+---
+
+**8\. verify**
+###### 接口功能
+> 验证数据
+
+###### URL
+> http://127.0.0.1:8001/verify
+
+###### 支持格式
+> JSON
+
+###### HTTP请求方式
+> POST
+
+###### 请求参数
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|chaincodeName|ture|string|调用链码名称|notary|
+|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
+
+###### 链码请求json数据
+|参数|必选|类型|说明|example|
+| :--- | :--- | :--- | :--- | :--- |
+|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
+|compares|true|[]string|比较字段名称|["id","number"]|
+|content|true|string|数据json字符串|"{\"notaryOfficeId\":40,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}"|
+|checkType|true|string|验证类型|"test"|
+
+###### 链码请求数据未加密前示例
+```json
 {
-    "code": 1,
-    "msg": "success",
-    "data": "04728e49f6d4b695d5ff07415a16565eb07a5c5af7d55e452c79816883844f3f56eb003a87a54040c2da0e88ca196aecaa585585ffed50c4451dfcd01e11749fea90d9e294839e301036978b05f0466802dcebfc14beb9cb8f9bcaec3c097574e12ff7f18823ac02a3fbb6e8e57b8e5faeab1f9234eaa43d5f47764cdf774a86fcaca43f0d914a95f9cca4cc971eae6705e23d68a59958aa53a4088706d5a8e09e390b6e68b8c2c8942dcae11522cb05c6bf0190c8844536bbee6b46bbd846b31ba54750157eee0a437b110079222129ab91a52621bfbb05ec8339ea40321fa883e0c7c64462f99e933208ac2342eb0c5110ac201654e47bbc574727d9be13cf75"
+  "keys": ["144","C402022072640"],
+  "compares": ["serviceType","notaryOfficeId"],
+  "content": "{\"notaryOfficeId\":40,\"serviceType\":12312,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}",
+  "checkType": "test"
 }
+```
+
+###### 返回字段解密后结构
+|返回字段|字段类型|说明                              |
+|:---:   |:---:|:---:|
+|code   |int    |请求状态 0：失败；1：成功   |
+|msg  |string | 请求信息                      |
+|data |string |链码返回数据|
+
+###### 接口示例
+``` json
+0451feeaf93749b9a61544436fdd239ab4b1b8c1eb7e8c4443949bf3b2bf1581ac5cbeae3e74979ce364c5a02c705dcb00a727287fa85133d75104f1b43369c54172c827c4cdfa70324db3cfc2c2ade9de2d278965633919c3ce1463091c8549c013f730675bcba7b569da7bf9149547021db8c54b24780ef64e349f8a6a45301d23e444e1c44bbc983efc1fb25fc49afebe342b062ebcdfa900a68c446e13d8153fb9ccd4b4562503819d1549621c90cde2fb07d2b65a6941896aa41505ae39202f2c527ef8222e38854b9fc212d6459fe332786be72cb7853b8743912c6a86bf065d9f00fcfcce25180cf1639aad7a9ddc176365536dea4093b1cb252bb80887c7e8b336cba4abd36cf99ff12e4293c94e251206d24f349a1ddec10e1690ba95de8e40a60e28ee57fbb8f5c1d4f7502801f6e7ac2e14ee0c3502ddfbde3036cbaaa9a89c83be8220
 ```

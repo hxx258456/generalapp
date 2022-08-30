@@ -23,5 +23,6 @@ func InitRouter() {
 	r.POST("/queryAll", api.QueryAll)
 	r.POST("/querysByPagination", api.QuerysByPagination)
 	r.POST("/queryLog", api.QueryLog)
+	r.POST("/check", api.Check)
 	r.Run(config.Get().System.Addr) // 监听并在 0.0.0.0:8080 上启动服务
 }
