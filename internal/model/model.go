@@ -30,10 +30,10 @@ type KeysData struct {
 
 // 链码验证方法请求体
 type CheckData struct {
-	Keys      []string `json:"keys" binding:"required"`
-	Compares  []string `json:"compares" binding:"required"`
-	Content   string   `json:"content" binding:"required"`
-	CheckType string   `json:"checkType" binding:"required"`
+	Keys      []string          `json:"keys" binding:"required"`
+	Compares  map[string]string `json:"compares" binding:"required"`
+	Content   string            `json:"content" binding:"required"`
+	CheckType string            `json:"checkType" binding:"required"`
 }
 
 // 响应体

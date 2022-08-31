@@ -422,12 +422,12 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 
 ---
 
-**8\. verify**
+**8\. check**
 ###### 接口功能
 > 验证数据
 
 ###### URL
-> http://127.0.0.1:8001/verify
+> http://127.0.0.1:8001/check
 
 ###### 支持格式
 > JSON
@@ -439,13 +439,13 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 |参数|必选|类型|说明|example|
 | :--- | :--- | :--- | :--- | :--- |
 |chaincodeName|ture|string|调用链码名称|notary|
-|data|true|string|链码请求数据sm2加密16进制字符串|048502008185906f51be4d64c75db8424e30ea680ad875e8fa11e53588549ad07c1bc6146e0d79f12d99fd49707d608757f4b625ea6f708ce8adcb7530be550eb921f14a37bf3001eb85a9c61860fbb2cfdcb59ae74fc46f56c74ad320b15378e132ee0b968a783bcf7f13e41650ea3cb1e5a93bf8246e02|
+|data|true|string|链码请求数据sm2加密16进制字符串|044e52e7fd422ed4a34a5a02a949268d8c593f0ac00dafd524f439d4808eeea11b86b9dc8be4cdf01b6249d24e3bd7e71fef490cc3ce5bab7eb2d46fe46061e0d4612f65361c6b2fd4140d743421263a670acad7fa9b01d659f7d6f971be7225535d819663da497b4d4199800fab2fddb8c9dbb4022da7e0975a20f75fc7a03aeed9472859e8e013dc5f17732f0bc23b6ab5cb8c8d35061d8b6f5f73431fb6b1839b4052367edbb4a815c51edb8fcae81cf03ca3e7b4fc2ab0b61b6c2a59ecdb4fec4f912a8f6e2d0d3f825517e7102157d8d38881f1a6fb8201e64dff272e09b8bb581c4ffc7f24722ae14674f70f9811603547a19e8a37fd36847a992ce5f78454c010c91f56fb23adcfb3eccf6f8496d0e1513b8d46df85aa54ddfbd7848add623f57023c80101175a96f32f276|
 
 ###### 链码请求json数据
 |参数|必选|类型|说明|example|
 | :--- | :--- | :--- | :--- | :--- |
-|keys|true|[]string|参数字符串数组|["144","C402022072640"]|
-|compares|true|[]string|比较字段名称|["id","number"]|
+|keys|true|[]string|参数字符串数组|["121","C402","12312"]|
+|compares|true|map[string]string|比较字段键值对,验证数据字段名为key,链上记录字段名为value|{"notaryOfficeId":"notaryOfficeId"}|
 |content|true|string|数据json字符串|"{\"notaryOfficeId\":40,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}"|
 |checkType|true|string|验证类型|"test"|
 
@@ -453,7 +453,7 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 ```json
 {
   "keys": ["144","C402022072640"],
-  "compares": ["serviceType","notaryOfficeId"],
+  "compares": {"notaryOfficeId":"notaryOfficeId"},
   "content": "{\"notaryOfficeId\":40,\"serviceType\":12312,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}",
   "checkType": "test"
 }
@@ -464,9 +464,9 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回数据|
+|data |string |链码返回验证结果,以及txId|
 
 ###### 接口示例
 ``` json
-0451feeaf93749b9a61544436fdd239ab4b1b8c1eb7e8c4443949bf3b2bf1581ac5cbeae3e74979ce364c5a02c705dcb00a727287fa85133d75104f1b43369c54172c827c4cdfa70324db3cfc2c2ade9de2d278965633919c3ce1463091c8549c013f730675bcba7b569da7bf9149547021db8c54b24780ef64e349f8a6a45301d23e444e1c44bbc983efc1fb25fc49afebe342b062ebcdfa900a68c446e13d8153fb9ccd4b4562503819d1549621c90cde2fb07d2b65a6941896aa41505ae39202f2c527ef8222e38854b9fc212d6459fe332786be72cb7853b8743912c6a86bf065d9f00fcfcce25180cf1639aad7a9ddc176365536dea4093b1cb252bb80887c7e8b336cba4abd36cf99ff12e4293c94e251206d24f349a1ddec10e1690ba95de8e40a60e28ee57fbb8f5c1d4f7502801f6e7ac2e14ee0c3502ddfbde3036cbaaa9a89c83be8220
+0451feeaf93749b9a61544436fdd239ab4b1b8c1eb7e8c4443949bf3b2bf1581ac5cbeae3e74979ce364c5a02c705dcb00a727287fa85133d75104f1b43369c54172c827c4cdfa70324db3cfc204d72d7d5d511f843f6cf22ab73e110af6ad21ba47b7e0289c59a60cbf6d6977c47137ef494db504a2bb08ea5edf939e41c20c858f2a80f651c41217df9be9cd4d0e4d9b4d3ff64c1e7a7c9753b0f715ed06fabe66b4d6e01d337c43ffb6287704425c9c56b6c65c2756a1f3f5b6c14ccfc0e5e7b99957685f538eb546224254b18674be79a790a86075956f762a4f3fb2b594817cbb5988de17b63d7431fdf528e8a20779c36aa5599e7b8ef917902e754ef133f9b6b70b52a22fd039e4fb040d0ea52ca2
 ```

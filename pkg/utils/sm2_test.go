@@ -2,6 +2,8 @@ package utils
 
 import (
 	"encoding/hex"
+	"encoding/json"
+	"generalapp/internal/model"
 	"testing"
 )
 
@@ -23,7 +25,7 @@ func TestInitSm2(t *testing.T) {
 
 func TestDecrypt(t *testing.T) {
 	_, private := InitSm2("0ce2fa6e66521155f780573beb0e5f18d0aeea6b9a145f54e5c8c442efd15ecf", "fa332850bffd6e06cbbd6e29ac851fe12da302c74550c3d75e24db54a2a1fdd7", "0b15a775077e438bce6ebcb7b30c3e61d9909ee861568723661d4728ee701068")
-	msg := `041366d4eaa27e1ddd3822a3a9bfa00812cd238c352fe648a6f95783c639703a7b3c5115cebfff799e6b28720f61a25d5e038dd55fd15e90cd2656e2e050806bd9c43f9090564de052befe6d2794a1f86a83e31e5353cb78c0264512a1c289d75b129babd5429757c5d76e4eca74443af719c7e8a3eebd4f66c7988168d92335864828fe7b1dfd5b361a8d71606e132c76d61da62b18f161b6fcc9a87870cc73e0a6e0796b59c623f1c3d2554dbc9915f12348078816065b9d68e93f6b51efd4a3b65020400275ada7ee7a3d4238f16240d9338572bf36837469726a9089a4e64c0b4373cb4afd46f35da8833f3db5d357830cca0ae4633f6029cbc357536f53640821e790033da1590d0ae98631a667717c4b560a4569a82f60e01c6838747bf663d201eeeb15b7e8e1ab7fa1f7fb6b3bb78169a9e5bc2e09492ba5598c9c759f17e2ab809407960d2e20755f84b281d8ba576255f2369c079044c5666b71a9a94d5512d0ad60349249c87691e05b2f0842a38662e0cdf376954378840906295b044f85074969f7162e762b091160157afbf4065fb7be6357c5e8d6300fb4baf6a1ded368e24e31bf`
+	msg := `04e1ac3bbe87961dbfaa379e18c25bfd92b8b6b940e29ab932fcf21de3d2da24e3e11ca71e14a5a02dd4b6c86dc5e895b556d2513cb8a58632c918e021ef1c7c2fa696e1007f2e01355bea5900202ba333f7f1559eae2190f5181ae3693ea556c6f00d6a88cdb8e9090d052195f3f095b0c83ed46277c9f55b55ea21a71af4bf17aa24e8a0bd79afe8d994ae017604cc003c6afea2929c179671383ebb047912ee3e92499c5d5a458d8c46aa1762954b63d933c2e13ec8fb01e06e0d8d60566ff6e269ceca0e154c83d2004f95db8a85b6564e345601bdb81aa15fc4211d94ab54fcc0ef8a499f5f8a50`
 	hex_byte, err := hex.DecodeString(msg)
 	if err != nil {
 		t.Error(err)
@@ -123,11 +125,21 @@ func TestMockQueryByPageData(t *testing.T) {
 }
 
 func TestMockCheckData(t *testing.T) {
-	data := `{"keys":["121","C402","12312"],"compares":["notaryOfficeId"],"checkType":"test","content":"{\"notaryOfficeId\":23,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}"}`
+	// data := `{"keys":["121","C402","12312"],"compares":"{\"notaryOfficeId\":\"notaryOfficeId\"}","checkType":"test","content":"{\"notaryOfficeId\":40,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2021-12-12 10:17:07\"}"}`
+	data := new(model.CheckData)
+	data.CheckType = "operatorCheck"
+	data.Compares = map[string]string{"pCodeqq": "pCode", "phone": "phone", "meid": "meid"}
+	data.Content = "{\"pCodeqq\":\"ooo\",\"name\":\"石宏伟3333\",\"phone\":\"iii\",\"meid\":\"ppp\",\"deviceModel\":\"iPhone 7\",\"brand\":\"APPLE\",\"deviceVersion\":\"iOS 13.3.1\",\"txId\":\"0a0d60978ba86518b43fd4b2376f5fe86c1b10742647e05f357ec291b901be45\",\"status\":\"1\",\"createTime\":\"1637543996428\"}"
+	data.Keys = []string{"key1111", "key2222", "key3333"}
+
+	byteData, err := json.Marshal(data)
+	if err != nil {
+		t.Error(err)
+	}
 
 	public, _ := InitSm2("0ce2fa6e66521155f780573beb0e5f18d0aeea6b9a145f54e5c8c442efd15ecf", "fa332850bffd6e06cbbd6e29ac851fe12da302c74550c3d75e24db54a2a1fdd7", "0b15a775077e438bce6ebcb7b30c3e61d9909ee861568723661d4728ee701068")
 
-	encData, err := Encrypt(public, data)
+	encData, err := Encrypt(public, string(byteData))
 	if err != nil {
 		t.Error(err)
 	}
