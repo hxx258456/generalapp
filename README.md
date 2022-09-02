@@ -464,7 +464,7 @@ docker run -itd --restart=always --name genralapp --net=host -p 8001:8001 -v $(p
 |:---:   |:---:|:---:|
 |code   |int    |请求状态 0：失败；1：成功   |
 |msg  |string | 请求信息                      |
-|data |string |链码返回验证结果,以及txId|
+|data |string |checkResult:链码返回验证结果0失败；1成功,txId:验证记录交易ID|
 
 ###### 接口示例
 ``` json

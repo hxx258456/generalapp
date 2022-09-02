@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
 
 	"github.com/hxx258456/ccgo/sm2"
@@ -106,10 +105,11 @@ func (s *Sdk) populateWallet(wallet *gateway.Wallet) error {
 
 func init() {
 	log.Println("============ generalapp wallet initing ============")
-	err := os.Setenv("DISCOVERY_AS_LOCALHOST", "true")
-	if err != nil {
-		log.Fatalf("Error setting DISCOVERY_AS_LOCALHOST environemnt variable: %v", err)
-	}
+	// err := os.Setenv("DISCOVERY_AS_LOCALHOST", "true")
+	// if err != nil {
+	// 	log.Fatalf("Error setting DISCOVERY_AS_LOCALHOST environemnt variable: %v", err)
+	// }
+	var err error
 	wallet, err = gateway.NewFileSystemWallet("wallet")
 	if err != nil {
 		log.Fatalf("Failed to create wallet: %v", err)
