@@ -17,6 +17,8 @@ func init() {
 			ChannelName:      v.Channel,
 			OrganizationsDir: v.OrganizationsDir,
 			WalletLabel:      v.WalletLabel,
+			CerdPath:         v.CerdPath,
+			CcpPath:          v.CcpPath,
 		}
 		sdk_.InitSdk()
 		log.Printf("============ init sdk[%s] sm2 ============", v.Chaincode)

@@ -27,6 +27,8 @@ type Sdk struct {
 	Private          *sm2.PrivateKey
 	OrganizationsDir string
 	WalletLabel      string //钱包身份信息
+	CerdPath         string
+	CcpPath          string
 }
 
 func (s *Sdk) InitSdk() {
@@ -40,16 +42,9 @@ func (s *Sdk) InitSdk() {
 			log.Fatalf("Failed to populate wallet contents: %v", err)
 		}
 	}
-
-	ccpPath := filepath.Join(
-		s.OrganizationsDir,
-		"peerOrganizations",
-		"org1.example.com",
-		"connection-org1.yaml",
-	)
 	var err error
 	s.GW, err = gateway.Connect(
-		gateway.WithConfig(config.FromFile(filepath.Clean(ccpPath))),
+		gateway.WithConfig(config.FromFile(filepath.Clean(s.CcpPath))),
 		gateway.WithIdentity(wallet, s.WalletLabel),
 		// gateway.WithTimeout(2*time.Hour),
 	)
@@ -67,23 +62,15 @@ func (s *Sdk) InitSdk() {
 
 func (s *Sdk) populateWallet(wallet *gateway.Wallet) error {
 	log.Printf("============ 初始化sdk身份信息:%s ============\n", s.ChaincodeName)
-	credPath := filepath.Join(
-		s.OrganizationsDir,
-		"peerOrganizations",
-		"org1.example.com",
-		"users",
-		"Admin@org1.example.com",
-		"msp",
-	)
 
-	certPath := filepath.Join(credPath, "signcerts", "cert.pem")
+	certPath := filepath.Join(s.CerdPath, "signcerts", "cert.pem")
 	// read the certificate pem
 	cert, err := ioutil.ReadFile(filepath.Clean(certPath))
 	if err != nil {
 		return err
 	}
 
-	keyDir := filepath.Join(credPath, "keystore")
+	keyDir := filepath.Join(s.CerdPath, "keystore")
 	// there's a single file in this dir containing the private key
 	files, err := ioutil.ReadDir(keyDir)
 	if err != nil {

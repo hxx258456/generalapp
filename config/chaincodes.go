@@ -16,4 +16,6 @@ type Chaincodes struct {
 	Private          Private `yaml:"private"`
 	OrganizationsDir string  `yaml:"organizationsDir"`
 	WalletLabel      string  `yaml:"walletLabel"`
+	CerdPath         string  `yaml:"ceraPath"`
+	CcpPath          string  `yaml:"ccpPath"`
 }

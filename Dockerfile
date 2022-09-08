@@ -1,16 +1,16 @@
-#1.编译程序源码
-FROM golang:1.17.5 AS builder
-#设置gomod代理
-ENV GOPROXY https://goproxy.cn
-#启动gomod
-ENV GO111MODULE on
-ENV PROJECTNAME generalapp
-#将编译所需必要文件添加过来
-ADD . /home/generalapp
-WORKDIR /home/generalapp/
-#编译 使用纯go编译
-ENV CGO_ENABLE 0
-RUN go build -tags netgo -o generalapp .
+# #1.编译程序源码
+# FROM golang:1.17.5 AS builder
+# #设置gomod代理
+# ENV GOPROXY https://goproxy.cn
+# #启动gomod
+# ENV GO111MODULE on
+# ENV PROJECTNAME generalapp
+# #将编译所需必要文件添加过来
+# ADD . /home/generalapp
+# WORKDIR /home/generalapp/
+# #编译 使用纯go编译
+# ENV CGO_ENABLE 0
+# RUN go build -tags netgo -o generalapp .
 
 #2.构建运行镜像
 FROM alpine

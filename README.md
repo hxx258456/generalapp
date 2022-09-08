@@ -26,6 +26,10 @@ chaincodes:
     organizationsDir: organizations
     # 钱包id可以链码名称配置一致
     walletLabel: general
+    # connect链接文件目录
+    ccpPath: organizations/peerOrganizations/org1.example.com/connection-org1.yaml
+    # msp身份信息目录
+    cerdPath: organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
   - channel: mychannel
     chaincode: general2
     public:
@@ -35,6 +39,10 @@ chaincodes:
       privateKey: 0b15a775077e438bce6ebcb7b30c3e61d9909ee861568723661d4728ee701068
     organizationsDir: organizations
     walletLabel: general2
+    # connect链接文件目录
+    ccpPath: organizations/peerOrganizations/org1.example.com/connection-org1.yaml
+    # msp身份信息目录
+    cerdPath: organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 ```
 
 # 部署
