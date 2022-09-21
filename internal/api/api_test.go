@@ -1,8 +1,1 @@
 package api
-
-// import "generalapp/internal/model"
-
-// var param = model.AddDataReuqest{
-// 	Keys:    "[\"144\",\"C402022072640\"]",
-// 	Content: "{\"notaryOfficeId\":40,\"serviceType\":3,\"notarizationNumber\":\"KFGZS003\",\"payTime\":\"2022-07-26 10:17:07\",\"traditionalNotarization\":[{\"notaryUnit\":\"刘晋璇的公证处\",\"checkCertificatePerson\":\"测试人\",\"traditionalId\":144,\"notarizationImgurl\":\"group1/M00/00/53/J2TgVGLfTsqAKWtAAAKMdeU7ICI396.png\",\"notarizationNum\":\"KFGZS003\",\"contentOne\":\"<span>请在这里输入内容……</span>\",\"createdTime\":\"2022-07-26 10:17:46\",\"certificateTime\":\"2022-07-26 10:17:47.0\",\"acceptPerson\":\"刘晋璇\",\"id\":2591297639273550,\"title\":\"公证书\"}],\"certificateTime\":\"2022-07-26 15:24:28\",\"number\":\"C402022072640\",\"payType\":1,\"price\":0.01,\"applyPhone\":\"15769202535\",\"id\":144,\"applyName\":\"天朗\",\"notaryOfficeName\":\"刘晋璇的公证处\",\"checkPerson\":\"刘晋璇\",\"acceptTime\":\"2022-07-26 10:17:17\",\"applyItems\":[{\"applyType\":1,\"applyId\":76,\"traditionalId\":144,\"itemsName\":\"事项7\",\"itemsId\":54,\"itemsNum\":1,\"applyName\":\"拍卖\"},{\"applyType\":1,\"applyId\":76,\"traditionalId\":144,\"itemsName\":\"事项6\",\"itemsId\":53,\"itemsNum\":1,\"applyName\":\"拍卖\"}],\"checkNotes\":\"开发-天朗-费用\",\"freeData\":1,\"schedule\":1,\"applyRelationId\":16,\"checkCertificatePerson\":\"刘晋璇\",\"createBy\":27,\"checkTime\":\"2022-07-26 10:16:37\",\"createTime\":\"2022-07-26 10:15:54\",\"connectionPhone\":\"151****1730\",\"acceptPerson\":\"刘晋璇\",\"applyCode\":\"140110200105110334\",\"connectionName\":\"刘**\",\"userType\":1,\"certificateNum\":1,\"payStatus\":1,\"certificateType\":1,\"status\":5}",
-// }
