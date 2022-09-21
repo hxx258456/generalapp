@@ -14,19 +14,20 @@
 
 #2.构建运行镜像
 FROM alpine
-RUN sed -i 's!dl-cdn.alpinelinux.org/!mirrors.ustc.edu.cn/!g' /etc/apk/repositories \
+RUN sed -i 's/https:\/\/dl-cdn.alpinelinux.org/http:\/\/8.142.113.6:8081\/repository\/alpine/g' /etc/apk/repositories \
+    && apk update && apk upgrade && rm -rf /var/lib/apk/* \
+# sed -i 's!dl-cdn.alpinelinux.org/!mirrors.ustc.edu.cn/!g' /etc/apk/repositories \
 # && sed -i 's!https://dl-cdn.alpinelinux.org/!https://mirrors.ustc.edu.cn/!g' /etc/apk/repositories \
-&&  apk add --no-cache ca-certificates \
-&&  update-ca-certificates \
-&&  apk --no-cache add tzdata  \
-&&  cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-&&  echo "Asia/Shanghai" > /etc/timezone
-ENV TZ=Asia/Shanghai
-WORKDIR /home/generalapp/
-#将上一阶段的产物复制过来 解决镜像过大的问题
-COPY generalapp .
-RUN chmod +x generalapp
-#启动命令
-EXPOSE 8001
-CMD ["./generalapp"]
-
+    &&  apk add --no-cache ca-certificates \
+    &&  update-ca-certificates \
+    &&  apk --no-cache add tzdata  \
+    &&  cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    &&  echo "Asia/Shanghai" > /etc/timezone
+    ENV TZ=Asia/Shanghai
+    WORKDIR /home/generalapp/
+    #将上一阶段的产物复制过来 解决镜像过大的问题
+    COPY generalapp .
+    RUN chmod +x generalapp
+    #启动命令
+    EXPOSE 8001
+    CMD ["./generalapp"]

@@ -1,0 +1,14 @@
+version: '3.3'
+services:
+    generalapp:
+        restart: unless-stopped
+        container_name: genralapp
+        image: generalapp:v0.0.1
+        build: .
+        network_mode: host
+        ports:
+            - '8001:8001'
+        volumes:
+            - '$(pwd)/organizations:/home/generalapp/organizations'
+            - '$(pwd)/config.yaml:/home/generalapp/config.yaml'
+        
